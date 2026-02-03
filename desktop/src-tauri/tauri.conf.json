@@ -19,8 +19,9 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "resources": ["../../bestsub*", "../../config.json"],
-    "externalBin": ["../../bestsub"],
+    "resources": {
+      "../bestsub": "./"
+    },
     "windows": {
       "certificateThumbprint": null,
       "digestAlgorithm": "sha256",
@@ -56,14 +57,7 @@
   },
   "plugins": {
     "shell": {
-      "open": true,
-      "scope": [
-        {
-          "name": "bestsub",
-          "cmd": "bestsub",
-          "sidecar": true
-        }
-      ]
+      "open": true
     }
   }
 }

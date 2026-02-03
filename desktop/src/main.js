@@ -7,14 +7,14 @@ let retryCount = 0;
 
 async function checkServerHealth() {
     try {
-        const response = await fetch(`${SERVER_URL}/api/health`, {
+        // Try to fetch the root page first
+        const response = await fetch(`${SERVER_URL}`, {
             method: 'GET',
-            headers: {
-                'Accept': 'application/json'
-            }
+            mode: 'no-cors'
         });
-        return response.ok;
+        return true;
     } catch (error) {
+        console.log('Server check failed:', error.message);
         return false;
     }
 }
@@ -48,7 +48,7 @@ async function loadWebUI() {
         const serverReady = await waitForServer();
         
         if (!serverReady) {
-            throw new Error('后端服务启动超时，请检查端口是否被占用或查看日志文件');
+            throw new Error('后端服务启动超时。请检查:\n1. 端口 8080 是否被占用\n2. 是否有足够的权限运行程序\n3. 查看日志文件了解详细信息');
         }
         
         // 创建 iframe 加载 Web UI
@@ -59,6 +59,7 @@ async function loadWebUI() {
         iframe.style.border = 'none';
         
         iframe.onload = () => {
+            console.log('Web UI loaded successfully');
             loading.classList.add('hidden');
         };
         
