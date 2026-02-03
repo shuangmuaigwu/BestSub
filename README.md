@@ -20,7 +20,20 @@ BestSub 是一个高性能的节点检测，订阅转换服务，基于 Go 语�
 
 ## 🚀 快速开始
 
-### 方式一：直接运行
+### 方式一：桌面应用（推荐）
+
+使用 Tauri 构建的桌面应用，提供原生桌面体验：
+
+1. 从 [Releases](https://github.com/bestruirui/BestSub/releases/latest) 页面下载适合您系统的桌面应用安装包
+   - Windows: `.msi` 安装包
+   - macOS: `.dmg` 安装包
+   - Linux: `.deb` 或 `.AppImage` 安装包
+2. 安装并运行应用
+
+**或自行构建桌面应用：**
+详见 [desktop/README.md](desktop/README.md) 文档
+
+### 方式二：直接运行
 
 1. 从 [Releases](https://github.com/bestruirui/BestSub/releases/latest) 页面下载适合您系统架构的可执行文件
 2. 直接运行程序，系统将自动：
@@ -28,7 +41,7 @@ BestSub 是一个高性能的节点检测，订阅转换服务，基于 Go 语�
    - 下载 WebUI 
    - 下载 Subconverter
 
-### 方式二：Docker
+### 方式三：Docker
 
 ```bash
 docker run -d \
@@ -47,7 +60,7 @@ docker run -d \
 - `-v /path/to/data:/app/data`: 数据持久化挂载（请将 `/path/to/data` 替换为您的实际路径）
 - `-p 8080:8080`: 端口映射，访问地址为 `http://localhost:8080`
 
-### 方式三：Docker Compose
+### 方式四：Docker Compose
 
 创建 `docker-compose.yml` 文件：
 
