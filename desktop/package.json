@@ -1,0 +1,16 @@
+{
+  "name": "bestsub-desktop",
+  "version": "1.0.0",
+  "description": "BestSub Desktop Application",
+  "scripts": {
+    "tauri": "tauri",
+    "dev": "tauri dev",
+    "build": "tauri build"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.2.0"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.2.0"
+  }
+}
