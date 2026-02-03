@@ -1,0 +1,92 @@
+name: Build Desktop App
+
+on:
+  push:
+    tags:
+      - 'desktop-v*'
+  workflow_dispatch:
+
+jobs:
+  build-desktop:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [ubuntu-22.04, windows-latest, macos-latest]
+
+    runs-on: ${{ matrix.platform }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install dependencies (Ubuntu only)
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev \
+            build-essential \
+            curl \
+            wget \
+            file \
+            libssl-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev
+
+      - name: Build Go backend
+        run: |
+          go build -ldflags="-s -w" -o bestsub${{ matrix.platform == 'windows-latest' && '.exe' || '' }} ./cmd/bestsub
+        shell: bash
+
+      - name: Copy backend to desktop directory
+        run: |
+          cp bestsub${{ matrix.platform == 'windows-latest' && '.exe' || '' }} desktop/
+        shell: bash
+
+      - name: Install frontend dependencies
+        working-directory: ./desktop
+        run: npm install
+
+      - name: Build Tauri app
+        working-directory: ./desktop
+        run: npm run build
+
+      - name: Upload artifacts (Windows)
+        if: matrix.platform == 'windows-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: bestsub-desktop-windows
+          path: desktop/src-tauri/target/release/bundle/msi/*.msi
+
+      - name: Upload artifacts (macOS)
+        if: matrix.platform == 'macos-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: bestsub-desktop-macos
+          path: desktop/src-tauri/target/release/bundle/dmg/*.dmg
+
+      - name: Upload artifacts (Linux - DEB)
+        if: matrix.platform == 'ubuntu-22.04'
+        uses: actions/upload-artifact@v4
+        with:
+          name: bestsub-desktop-linux-deb
+          path: desktop/src-tauri/target/release/bundle/deb/*.deb
+
+      - name: Upload artifacts (Linux - AppImage)
+        if: matrix.platform == 'ubuntu-22.04'
+        uses: actions/upload-artifact@v4
+        with:
+          name: bestsub-desktop-linux-appimage
+          path: desktop/src-tauri/target/release/bundle/appimage/*.AppImage

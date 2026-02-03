@@ -9,6 +9,8 @@ api/*
 # build
 dist/*
 build
+bestsub
+bestsub.exe
 
 # vscode
 .vscode
